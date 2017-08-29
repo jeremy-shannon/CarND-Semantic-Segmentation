@@ -1,4 +1,11 @@
-# Semantic Segmentation
+# UDACITY SELF-DRIVING CAR ENGINEER NANODEGREE
+# Semantic Segmentation Project (Advanced Deep Learning)
+
+
+---
+
+## *The following is from the original Udacity repository README*
+
 ### Introduction
 In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN).
 
