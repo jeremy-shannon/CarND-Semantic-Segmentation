@@ -54,14 +54,22 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :return: The Tensor for the last layer of output
     """
     # TODO: Implement function
+    # 1x1 convolution of vgg layer 7
     layer7a_out = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, 1)
+    # upsample
     layer4a_in1 = tf.layers.conv2d_transpose(layer7a_out, num_classes, 4, strides=(2, 2))
     # make sure the shapes are the same!
+    # 1x1 convolution of vgg layer 4
     layer4a_in2 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, 1)
+    # skip connection (element-wise addition)
     layer4a_out = tf.add(layer4a_in1, layer4a_in2)
+    # upsample
     layer3a_in1 = tf.layers.conv2d_transpose(layer4a_out, num_classes, 4, strides=(2, 2))
+    # 1x1 convolution of vgg layer 3
     layer3a_in2 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, 1)
+    # skip connection (element-wise addition)
     layer3a_out = tf.add(layer3a_in1, layer3a_in2)
+    # upsample
     nn_last_layer = tf.layers.conv2d_transpose(layer3a_out, num_classes, 16, strides=(8, 8))
     return nn_last_layer
 tests.test_layers(layers)
