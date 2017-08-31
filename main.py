@@ -32,8 +32,15 @@ def load_vgg(sess, vgg_path):
     vgg_layer3_out_tensor_name = 'layer3_out:0'
     vgg_layer4_out_tensor_name = 'layer4_out:0'
     vgg_layer7_out_tensor_name = 'layer7_out:0'
+
+    tf.saved_model.loader.load(sess, [vgg_tag], vgg_path)
+    image_input = tf.get_default_graph().get_tensor_by_name(vgg_input_tensor_name)
+    keep_prob = tf.get_default_graph().get_tensor_by_name(vgg_keep_prob_tensor_name)
+    layer3_out = tf.get_default_graph().get_tensor_by_name(vgg_layer3_out_tensor_name)
+    layer4_out = tf.get_default_graph().get_tensor_by_name(vgg_layer4_out_tensor_name)
+    layer7_out = tf.get_default_graph().get_tensor_by_name(vgg_layer7_out_tensor_name)
     
-    return None, None, None, None, None
+    return image_input, keep_prob, layer3_out, layer4_out, layer7_out
 tests.test_load_vgg(load_vgg, tf)
 
 
@@ -47,7 +54,14 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :return: The Tensor for the last layer of output
     """
     # TODO: Implement function
-    return None
+    layer7a = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, 1)
+    layer4a_in = tf.layers.conv2d_transpose(layer7a, num_classes, 4, strides=(2, 2))
+    # make sure the shapes are the same!
+    layer4a_out = tf.add(layer4a_in, vgg_layer4_out)
+    layer3a_in = tf.layers.conv2d_transpose(layer4a_out, num_classes, 4, strides=(2, 2))
+    layer3a_out = tf.add(layer3a_in, vgg_layer3_out)
+    nn_last_layer = tf.layers.conv2d_transpose(layer3a_out, num_classes, 16, strides=(8, 8))
+    return nn_last_layer
 tests.test_layers(layers)
 
 
@@ -109,6 +123,8 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
+        image_input, keep_prob, layer3_out, layer4_out, layer7_out = load_vgg(sess, vgg_path)
+        nn_last_layer = layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes)
 
         # TODO: Train NN using the train_nn function
 
