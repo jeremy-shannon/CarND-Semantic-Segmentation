@@ -30,7 +30,7 @@ Loss per batch tends to average below 0.200 after two epochs and below 0.100 aft
 
 ### Samples
 
-Below are a few sample images from the output of the fully convolutional network, with the segmentation class overlaid upon the original image.
+Below are a few sample images from the output of the fully convolutional network, with the segmentation class overlaid upon the original image in green.
 
 ![sample1](./sample1.png)
 ![sample2](./sample2.png)
