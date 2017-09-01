@@ -173,7 +173,7 @@ def run():
         batch_size = 3
 
         # TF placeholders
-        correct_label = tf.placeholder(tf.float32, name='correct_label')
+        correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes], name='correct_label')
         learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
         input_image, keep_prob, vgg_layer3_out, vgg_layer4_out, vgg_layer7_out = load_vgg(sess, vgg_path)
